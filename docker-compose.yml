@@ -1,0 +1,25 @@
+services:
+  app:
+    container_name: filestash
+    image: machines/filestash
+    restart: always
+    ports:
+    - "8334:8334"
+    volumes:
+    - filestash:/app/data/state/
+  ftpd_server:
+      image: stilliard/pure-ftpd
+      container_name: pure-ftpd
+      ports:
+        - "21:21"
+        - "30000-30009:30000-30009"
+      volumes:
+        - ${SOURCE_DATA}:${FTP_USER_HOME}
+        - ftpvolume:/etc/pure-ftpd/passwd
+      environment:
+        PUBLICHOST: ${PUBLICHOST}
+        FTP_USER_HOME: ${FTP_USER_HOME}
+      restart: always
+volumes:
+    filestash: {}
+    ftpvolume: {}
